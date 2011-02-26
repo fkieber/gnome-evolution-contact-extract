@@ -1,0 +1,6 @@
+*~
+*.pyc
+*.pid
+*.js
+old/
+output/
