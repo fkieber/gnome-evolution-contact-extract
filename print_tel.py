@@ -8,48 +8,163 @@
 """
 Imprime le carnet d'adresse sous forme de liste téléphonique.
 Colonnes imprimées :
-    Nom
-    Domicile (téléphone)
-    Portable
-    Bureau (téléphone)
-    Adresse
-    Code postal
-    Ville
+    Nom [name, full-name, given-name, family-name, nickname]
+    Domicile (téléphone) [home-phone, home-phone-2, other-phone, primary-phone]
+    Portable [mobile-phone]
+    Bureau (téléphone) [business-phone, business-phone-2, company-phone]
+    Adresse complete [address-home, address-work, address-other][x]
+        x=0: ??
+        x=1: Boîte postale
+        x=2: Adresse (reste)
+        x=3: Adresse ligne 1
+        x=4: Ville
+        x=5: État/Province
+        x=6: Code postal
+        x=7: Pays
+    Adresse []
+    Code postal []
+    Ville []
 Tri par nom
-Exclusion des entrées ayant la catégorie 'no_print'
+Exclusion des entrées ayant la catégorie [categories, category-list] 'no_print'
 Exclusion des entrées sans téléphone (Domicile, Portable ou bureau)
 """
 
 import evolution, sys
+from ctypes import *
+
+# Propriétés pour le nom par ordre de priorité
+props_nom = [
+    'file-as', 
+    'name-or-org', 
+    'full-name', 
+    'family-name', 
+    'given-name', 
+    'nickname', 
+]
+
+# Propriétés pour le téléphone du domicile par ordre de priorité
+props_dom = [
+    'primary-phone', 
+    'home-phone', 
+    'home-phone-2', 
+    'other-phone', 
+]
+
+# Propriétés pour le téléphone portable par ordre de priorité
+props_port = [
+    'mobile-phone', 
+]
+
+# Propriétés pour le téléphone du bureau par ordre de priorité
+props_bur = [
+    'business-phone', 
+    'business-phone-2', 
+    'company-phone', 
+]
+
+# Propriétés pour l'adresse par ordre de priorité
+props_adr = [
+    'address-home', 
+    'address-work', 
+    'address-other', 
+    #'address-label-home', 
+    #'address-label-work', 
+    #'address-label-other', 
+]
+
+# Propriétés pour les catégories par ordre de priorité
+props_cat = [
+    'categories', 
+    'category-list', 
+]
+
+def print_properties(contact, prop_list):
+    s = ''
+    beg = ''
+    for prop in prop_list:
+        val = contact.get_property(prop)
+        if val == None:
+            val = ''
+        s += beg +"'" + prop + "' = '" + str(val) + "'"
+        beg = ', '
+    print s
+        
+# Decsciption d'une adresse
+class ContactAddress(Structure):
+    pass
+ContactAddress._fields_ = [("name", c_char_p), 
+                  ("next", POINTER(ContactAddress))]
 
 class Evo(object):
     
-    liste = []
-    
     def __init__(self):
+        
+        self._contacts = []
         
         # Extraction de tous les carnets d'adresses
         self._books = evolution.ebook.list_addressbooks()
         
         # Traitement de ceux-ci
         for book in self._books:
-            print "Carnet d'adresse : {0}".format(book[0])
             ob = evolution.ebook.open_addressbook(book[1])
-            cts = ob.get_all_contacts()
+            self._contacts += ob.get_all_contacts()
+    
+    def get_contact_list(self):
             
-            # Traitement de tous les contacts
-            for ct in cts:
-                cont = {}
-                cont['nom'] = ct.get_property('full-name')
-                cont['dom'] = ct.get_property('home-phone')
-                self.liste.append(cont)
-                
-        print self.liste
-                
+        liste = []
     
-eee=Evo()
+        # Traitement de tous les contacts 
+        # (un contact ,ct est de type ebook.EContact)
+        for ct in self._contacts:
+        
+            #print_properties(ct, props_nom)
+            
+            cont = {}
+            #cont['vcard'] = ct.get_vcard_string()
+            cont['nom'] = ct.get_property('file-as')
+            cont['dom'] = ct.get_property('home-phone')
+            
+            adr = ct.get_property('address-home')
+            cont['adr'] = adr
+            if adr != None:
+                pos = str(adr).find('at 0x')
+                if pos > 0:
+                    cl = ContactAddress.from_address(int(str(adr)[pos + 3:-1],  16))
+                    cont['adr'] = []
+                    while cl.name != None:
+                        cont['adr'].append(str(cl.name))
+                        cl = ContactAddress.from_address(addressof(cl.next))
+                    #print cont['adr']
+            
+            cat = ct.get_property('categories')
+            cont['cat'] = cat
+            if cat != None:
+                cont['cat'] = cat.split(',')
+            
+            liste.append(cont)
+        
+        return liste
     
+    def get_property_names(self):
+        names =[]
+        for prop in self._contacts[0].props:
+            names.append(prop.name)
+            #if self._contacts[0].get_property(prop.name) != None:
+                #print '  ',  prop.name, ':', self._contacts[0].get_property(prop.name)
+        return names
+                
+ev=Evo()
+
+for p in ev.get_property_names():
+    pass
+    #print p
+
+for itm in ev.get_contact_list():
+    pass
+    print itm
+
 sys.exit()
+    
 
 name_attributes = [
 	"full-name",
