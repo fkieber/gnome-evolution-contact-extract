@@ -2,12 +2,13 @@
 <!DOCTYPE Session SYSTEM "Session-4.4.dtd">
 <!-- eric5 session file for project print_tel -->
 <!-- This file was generated automatically, do not edit. -->
-<!-- Saved: 2011-02-26, 22:25:07 -->
+<!-- Saved: 2011-03-04, 00:29:49 -->
 <Session version="4.4">
   <Filenames>
-    <Filename cline="22" cindex="0" folds="" zoom="0">/home/fk/documents/informatique/develop/print_tel/print_tel.py</Filename>
+    <Filename cline="0" cindex="0" folds="" zoom="0">/home/fk/documents/informatique/develop/print_tel/print_tel.py</Filename>
+    <Filename cline="0" cindex="0" folds="" zoom="0">/home/fk/documents/informatique/develop/print_tel/EDS.py</Filename>
   </Filenames>
-  <ActiveWindow cline="22" cindex="0">/home/fk/documents/informatique/develop/print_tel/print_tel.py</ActiveWindow>
+  <ActiveWindow cline="0" cindex="0">/home/fk/documents/informatique/develop/print_tel/EDS.py</ActiveWindow>
   <Breakpoints>
   </Breakpoints>
   <Watchexpressions>
