@@ -1,7 +1,7 @@
 #Extraction/Affichage/Impression des contacts gnome/evolution.
 
 ###Dépendances
-dev-python/evolution-python
+[dev-python/evolution-python](http://live.gnome.org/Conduit/evolution-python)
 
 ###Description
 Extraction/Affichage/Impression des contacts de gnome/evolution.
