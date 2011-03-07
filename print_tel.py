@@ -125,6 +125,8 @@ for itm in liste:
         for col in ('nom', 'dom', 'port', 'bur', 'adr', 'cp', 'ville'):
             if itm[col] == None:
                 itm[col] = ''
+	    if col == 'ville':
+	    	itm[col] = itm[col].upper()
             s += virg + '"' +itm[col] + '"'
             virg = ' '
         print s

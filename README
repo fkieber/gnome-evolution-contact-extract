@@ -1,3 +1,4 @@
-Impression/affichage de la liste des téléphones.
+Extraction/Affichage/Impression des contactes de gnome/evolution.
 
-Basé sur evolution.
+Basé sur dev-python/evolution-python.
+
