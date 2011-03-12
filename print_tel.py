@@ -2,45 +2,45 @@
 # -*- coding: utf-8 -*-
 
 """
-Imprime le carnet d'adresse sous forme de liste téléphonique.
-Colonnes imprimées :
-    Nom [name, full-name, given-name, family-name, nickname]
-    Domicile (téléphone) [home-phone, home-phone-2, other-phone, primary-phone]
-    Portable [mobile-phone]
-    Bureau (téléphone) [business-phone, business-phone-2, company-phone]
-    Adresse complete [address-home, address-work, address-other][x]
+Prints the address book as a telephone list.
+Printed columns [followed by properties between brackets]:
+    Name [name, full-name, given-name, family-name, nickname]
+    Home (phone) [home-phone, home-phone-2, other-phone, primary-phone]
+    Mobile [mobile-phone]
+    Office (phone) [business-phone, business-phone-2, company-phone]
+    Postal Address [address-home, address-work, address-other][x]
         x=0: ??
-        x=1: Boîte postale
-        x=2: Adresse (reste)
-        x=3: Adresse ligne 1
-        x=4: Ville
-        x=5: État/Province
-        x=6: Code postal
-        x=7: Pays
-    Adresse []
-    Code postal []
-    Ville []
-Tri par nom
-Exclusion des entrées ayant la catégorie [categories, category-list] 'no_print'
-Exclusion des entrées sans téléphone (Domicile, Portable ou bureau)
+        x=1: PO Box
+        x=2: Address (remains)
+        x=3: Address line 1
+        x=4: City
+        x=5: State/Province
+        x=6: Postcode
+        x=7: Country
+    Address []
+    Postcode []
+    City []
+Sort by name
+Omitting entries with the category [categories, category-list] 'no_print'
+Omitting entries without a phone (home, mobile or desktop)
 """
 
 import sys
 from EDS import EDS
 
-# Table des carnets d'adresses exclus
+# Omottid address books
 excl_addrs_books = [
     'Envoyés', 
     'temp', 
 ]
 
-# Liste des catégories à exclure
+# Omitted categories
 excl_cats = [
     'no_print', 
 ]
 
-# Propriétés pour le nom par ordre de priorité
-props_nom = [
+# Properties for name in order of priority
+props_name = [
     'file-as', 
     'name-or-orgs', 
     'full-name', 
@@ -49,36 +49,36 @@ props_nom = [
     'nickname', 
 ]
 
-# Propriétés pour le téléphone du domicile par ordre de priorité
-props_dom = [
+# Properties for home phone in order of priority
+props_home = [
     'home-phone', 
     'home-phone-2', 
     'primary-phone', 
     'other-phone', 
 ]
 
-# Propriétés pour le téléphone portable par ordre de priorité
-props_port = 'mobile-phone'
+# Properties for mobile phone in order of priority
+props_mobile = 'mobile-phone'
 
-# Propriétés pour le téléphone du bureau par ordre de priorité
-props_bur = [
+# Properties for office phone in order of priority
+props_office = [
     'business-phone', 
     'business-phone-2', 
     'company-phone', 
 ]
 
-# Propriétés pour l'adresse par ordre de priorité
-props_adr_rue = (
+# Properties for address in order of priority
+props_addr_street = (
     'address-home-line1', 
     'address_work-line1', 
     'address_other-line1', 
 )
-props_adr_cp = (
+props_addr_post = (
     'address-home-post', 
     'address_work-post', 
     'address_other-post', 
 )
-props_adr_ville = (
+props_addr_city = (
     'address-home-city', 
     'address_work-city', 
     'address_other-city', 
@@ -88,13 +88,13 @@ cfg = {
     'obooks': excl_addrs_books, 
     'ocats': excl_cats, 
     'fields': {
-        'nom': props_nom,       # Nom
-        'dom': props_dom,       # N° Tél. Domicile
-        'port': props_port,     # N° Tél. portable
-        'bur': props_bur,       # N° Tél. bureau
-        'adr': props_adr_rue,   # Rue de l'adresse
-        'cp': props_adr_cp,     # Code postal
-        'ville': props_adr_ville, 
+        'name': props_name,         # Name
+        'home': props_home,         # Home phone nbr
+        'mobile': props_mobile,     # Mobile phone nbr
+        'office': props_office,     # Office phone nbr
+        'addr': props_addr_street,  # Street name
+        'post': props_addr_post,    # Postcode
+        'city': props_addr_city,    # City
         #'test': 'list-show-addresses', 
     }
 }
@@ -103,30 +103,30 @@ eds=EDS()
 
 #eds._print_all_properties()
 
-print "Liste des carnets d'adresses =================="
+print "List of Address Books ======================="
 for itm in eds.get_books():
     pass
     #print itm
 print
 
-print "Liste des propriétés =========================="
+print "List of Properties =========================="
 for itm in eds.get_properties():
     pass
     #print itm
 print
 
-print "Liste des contacts ============================"
+print "List of Contacts ============================"
 liste = eds.get_contact_list(cfg)
-liste.sort(key=lambda e: e['nom'].lower())
+liste.sort(key=lambda e: e['name'].lower())
 for itm in liste:
-    if itm['dom'] != None or itm['port'] != None or itm['bur'] != None:
+    if itm['home'] != None or itm['mobile'] != None or itm['office'] != None:
         virg = ''
         s = ''
-        for col in ('nom', 'dom', 'port', 'bur', 'adr', 'cp', 'ville'):
+        for col in ('name', 'home', 'mobile', 'office', 'addr', 'post', 'city'):
             if itm[col] == None:
                 itm[col] = ''
-	    if col == 'ville':
-	    	itm[col] = itm[col].upper()
+            if col == 'city':
+                itm[col] = itm[col].upper()
             s += virg + '"' +itm[col] + '"'
             virg = ' '
         print s

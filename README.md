@@ -1,27 +1,22 @@
-#Extraction/Affichage/Impression des contacts gnome/evolution.
+#Extraction[/Display/Printing] contacts of gnome-evolution.
 
-###Dépendances
+###Dependencies
 [dev-python/evolution-python](http://live.gnome.org/Conduit/evolution-python)
 
 ###Description
-Extraction/Affichage/Impression des contacts de gnome/evolution.
+For now, only the extraction of a contacts list in "CSV" format is supported.
 
-Pour l’instant, seul la génération d’une liste de contacts au
-format "CSV" est supportée.
+- Configuration is done via a dictionary in the source print_tel.py.
+- Multiple address books to treat or omit.
+- Multiple categories to include or exclude contacts.
+- Creating fields to extract.
+- Each field can come from several properties of the contact. In this case, the first non-empty property that is taken.
 
-- La configuration se fait dans le source "print_tel.py".
-- On peut choisir plusieurs carnets d’adresses à traiter ou à omettre.
-- On peut choisir plusieurs catégories pour inclure ou exclure des contacts.
-- On peut choisir les champs à extraire.
-- Chaque champ peut provenir de plusieurs propriétés du contact.
-  Dans ce cas, c’est la première propriété renseignée qui est prise.
+###To Do:
 
-###A Faire :
+- A graphical interface for configuring an extraction.
+- Save/restore a extraction.
+- Display/printing of extracted data.
 
-- Une interface graphique permettant de configurer une extraction.
-- Sauvegarde d’une extraction.
-- Affichage des données extraites.
-- Impression des données extraites.
-
-###Licence
-Voir le fichier LICENCE
+###License
+Refer to the LICENSE file
